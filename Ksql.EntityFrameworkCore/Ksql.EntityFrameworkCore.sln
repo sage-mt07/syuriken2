@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.36105.23 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ksql.EntityFrameworkCore", "Ksql.EntityFrameworkCore.csproj", "{A23E8F8A-91E3-498D-B2CC-84C8B5EBD322}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A23E8F8A-91E3-498D-B2CC-84C8B5EBD322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A23E8F8A-91E3-498D-B2CC-84C8B5EBD322}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A23E8F8A-91E3-498D-B2CC-84C8B5EBD322}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A23E8F8A-91E3-498D-B2CC-84C8B5EBD322}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0B0918D3-8A55-461F-8C07-F62A65791997}
+	EndGlobalSection
+EndGlobal
