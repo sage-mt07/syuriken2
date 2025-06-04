@@ -118,11 +118,23 @@ namespace Ksql.EntityFramework.Query.Expressions
             var left = Visit(binaryExpression.Left);
             var right = Visit(binaryExpression.Right);
 
-            if (binaryExpression.NodeType == ExpressionType.Equal && right == "NULL")
-                return $"{left} IS NULL";
-            
-            if (binaryExpression.NodeType == ExpressionType.NotEqual && right == "NULL")
-                return $"{left} IS NOT NULL";
+            if (binaryExpression.NodeType == ExpressionType.Equal)
+            {
+                if (right == "NULL")
+                    return $"{left} IS NULL";
+
+                if (left == "NULL")
+                    return $"{right} IS NULL";
+            }
+
+            if (binaryExpression.NodeType == ExpressionType.NotEqual)
+            {
+                if (right == "NULL")
+                    return $"{left} IS NOT NULL";
+
+                if (left == "NULL")
+                    return $"{right} IS NOT NULL";
+            }
 
             if (KsqlOperatorMapper.IsStringOperator(binaryExpression.NodeType, 
                                                   binaryExpression.Left.Type, 

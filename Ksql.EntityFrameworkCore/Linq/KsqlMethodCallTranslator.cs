@@ -73,6 +73,7 @@ namespace Ksql.EntityFramework.Query.Translation
                 { (typeof(string), nameof(string.TrimEnd)), TranslateTrimEnd },
                 { (typeof(string), nameof(string.Substring)), TranslateSubstring },
                 { (typeof(string), nameof(string.Contains)), TranslateContains },
+                { (typeof(Enumerable), nameof(Enumerable.Contains)), TranslateCollectionContains },
                 { (typeof(string), nameof(string.StartsWith)), TranslateStartsWith },
                 { (typeof(string), nameof(string.EndsWith)), TranslateEndsWith },
                 { (typeof(string), nameof(string.IndexOf)), TranslateIndexOf },
@@ -174,6 +175,40 @@ namespace Ksql.EntityFramework.Query.Translation
             var instance = _expressionVisitor.Visit(methodCall!.Object);
             var value = _expressionVisitor.Visit(methodCall.Arguments[0]);
             return $"{instance} LIKE CONCAT('%', {value}, '%')";
+        }
+
+        private string TranslateCollectionContains(MethodCallExpression methodCall)
+        {
+            if (methodCall == null) throw new ArgumentNullException(nameof(methodCall));
+
+            Expression collectionExpr;
+            Expression valueExpr;
+
+            if (methodCall.Method.IsStatic && methodCall.Arguments.Count == 2)
+            {
+                collectionExpr = methodCall.Arguments[0];
+                valueExpr = methodCall.Arguments[1];
+            }
+            else
+            {
+                collectionExpr = methodCall.Object!;
+                valueExpr = methodCall.Arguments[0];
+            }
+
+            var value = _expressionVisitor.Visit(valueExpr);
+
+            if (collectionExpr is ConstantExpression constExpr && constExpr.Value is System.Collections.IEnumerable items && constExpr.Value is not string)
+            {
+                var list = new List<string>();
+                foreach (var item in items)
+                {
+                    list.Add(KsqlTypeMapper.GetKsqlLiteral(item!));
+                }
+                return $"{value} IN ({string.Join(", ", list)})";
+            }
+
+            var collectionSql = _expressionVisitor.Visit(collectionExpr);
+            return $"{value} IN {collectionSql}";
         }
 
         private string TranslateStartsWith(MethodCallExpression methodCall)
